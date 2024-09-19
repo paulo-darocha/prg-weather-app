@@ -1,23 +1,49 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import {
+   autoSpyObj,
+   injectSpy,
+   ObservablePropertyStrategy,
+} from "angular-unit-test-helper";
+import { of } from "rxjs";
+import { WeatherService } from "../weather/weather.service";
+import { CitySearchTpldrivenComponent } from "./city-search-tpldriven.component";
+import { inject } from "@angular/core";
 
-import { CitySearchTpldrivenComponent } from './city-search-tpldriven.component';
+describe("CitySearchTpldrivenComponent", () => {
+   let component: CitySearchTpldrivenComponent;
+   let fixture: ComponentFixture<CitySearchTpldrivenComponent>;
+   let weatherServiceMock: jasmine.SpyObj<WeatherService>;
 
-describe('CitySearchTpldrivenComponent', () => {
-  let component: CitySearchTpldrivenComponent;
-  let fixture: ComponentFixture<CitySearchTpldrivenComponent>;
+   beforeEach(waitForAsync(() => {
+      const weatherServiceSpy = autoSpyObj(
+         WeatherService,
+         ["currentWeather$"],
+         ObservablePropertyStrategy.BehaviorSubject
+      );
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CitySearchTpldrivenComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(CitySearchTpldrivenComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      TestBed.configureTestingModule({
+         providers: [{ provide: WeatherService, useValue: weatherServiceSpy }],
+         imports: [FormsModule, NoopAnimationsModule, CitySearchTpldrivenComponent],
+      }).compileComponents();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+      weatherServiceMock = injectSpy(WeatherService);
+   }));
+
+   beforeEach(() => {
+      fixture = TestBed.createComponent(CitySearchTpldrivenComponent);
+      component = fixture.componentInstance;
+   });
+
+   it("should create", () => {
+      // Arrange
+      weatherServiceMock.getCurrentWeather.and.returnValue(of());
+
+      // Act
+      fixture.detectChanges();
+
+      // Assert
+      expect(component).toBeTruthy();
+   });
 });

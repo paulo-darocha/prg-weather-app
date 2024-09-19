@@ -1,23 +1,51 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import {
+   autoSpyObj,
+   injectSpy,
+   ObservablePropertyStrategy,
+} from "angular-unit-test-helper";
+import { of } from "rxjs";
+import { WeatherService } from "../weather/weather.service";
+import { CitySearchComponent } from "./city-search.component";
 
-import { CitySearchComponent } from './city-search.component';
+describe("CitySearchComponent", () => {
+   let component: CitySearchComponent;
+   let fixture: ComponentFixture<CitySearchComponent>;
+   let weatherServiceMock: jasmine.SpyObj<WeatherService>;
 
-describe('CitySearchComponent', () => {
-  let component: CitySearchComponent;
-  let fixture: ComponentFixture<CitySearchComponent>;
+   beforeEach(waitForAsync(() => {
+      const weatherServiceSpy = autoSpyObj(
+         WeatherService,
+         ["currentWeather$"],
+         ObservablePropertyStrategy.BehaviorSubject
+      );
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CitySearchComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(CitySearchComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      TestBed.configureTestingModule({
+         imports: [
+            FormsModule,
+            ReactiveFormsModule,
+            NoopAnimationsModule,
+            CitySearchComponent,
+         ],
+         providers: [{ provide: WeatherService, useValue: weatherServiceSpy }],
+      }).compileComponents();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+      beforeEach(() => {
+         fixture = TestBed.createComponent(CitySearchComponent);
+         component = fixture.componentInstance;
+      });
+
+      it("should create", () => {
+         // Arrange
+         weatherServiceMock.getCurrentWeather.and.returnValue(of());
+
+         // Act
+         fixture.detectChanges();
+
+         // Assert
+         expect(component).toBeTruthy();
+      });
+   }));
 });
