@@ -3,11 +3,16 @@
       <span data-testid="title">PRG Weather</span>
    </mat-toolbar>
    <div fxLayoutAlign="center">
-      <div class="mat-caption v-pad">Your city, your forecast, right now</div>
+      <div class="mat-caption mat-caption v-pad">
+         Your city, your forecast, right now!
+      </div>
+   </div>
+   <div fxLayoutAlign="center">
+      <app-city-search></app-city-search>
    </div>
    <div fxLayout="row">
       <div fxFlex></div>
-      <mat-card appearance="outlined" fxFlex="300px">
+      <mat-card appearance="outlined" fxFlex="400px">
          <mat-card-header>
             <mat-card-title>
                <div class="mat-headline-5">Current Weather</div>
@@ -18,5 +23,14 @@
          </mat-card-content>
       </mat-card>
       <div fxFlex></div>
+   </div>
+</div>
+
+<div class="example">
+   <div fxLayoutAlign="center" style="margin-top: 64px">
+      <div class="mat-h3">Template-driven Form Input</div>
+   </div>
+   <div fxLayoutAlign="center">
+      <app-city-search-tpldriven></app-city-search-tpldriven>
    </div>
 </div>

@@ -1,4 +1,4 @@
-@if (current) {
+@if (current$ | async; as current) {
    <div>
       <div fxLayout="row">
          <div fxFlex="66%" class="mat-headline-6 no-margin">
@@ -9,18 +9,17 @@
             {{ current.date | date: "MMM d" }}{{ getOrdinal(current.date) }}
          </div>
       </div>
-
       <div fxLayout="row" fxLayoutAlign="center center" style="margin-bottom: -48px">
          <div fxFlex="55%">
             <img
-               style="zoom: 175%; margin-bottom: 32px"
                [src]="current.image"
-               [alt]="current.description" />
+               [alt]="current.description"
+               style="zoom: 175%; margin-bottom: 32px" />
          </div>
          <div fxFlex class="right no-margin">
             <p class="mat-headline-2">
                {{ current.temperature | number: "1.0-0" }}
-               <span>ºC</span>
+               <span class="mat-headline-4">ºC</span>
             </p>
          </div>
       </div>
@@ -30,6 +29,4 @@
          </div>
       </div>
    </div>
-} @else {
-   <div>no data</div>
 }
